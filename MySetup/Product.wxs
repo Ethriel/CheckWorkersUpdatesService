@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+
+	<?if $(var.Platform)=x64?>
+	<?define ProductCode = "{7EDE0226-1ECD-4BCC-BF36-D19FDCD01F84}"?>
+	<?else?>
+	<?define ProductCode = "{CC9F5C4A-5499-4324-8E74-9E7809F937E4}"?>
+	<?endif?>
+
+	<Product Id="$(var.ProductCode)"
+			 Name="!(loc.ProductName_$(var.Platform))"
+			 Language="!(loc.Language)"
+			 Manufacturer="Kerfoer"
+			 Version="$(var.BuildVersion)"
+			 UpgradeCode="690939AE-FB6E-4806-B205-B9A6D70857AC">
+		<Package InstallerVersion="200"
+				 Compressed="yes"
+				 InstallScope="perMachine"
+				 Manufacturer="Kerfoer"
+				 />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes"/>
+		<UIRef Id="WixUI_Minimal" />
+
+		<Feature Id="ProductFeature" Title="MySetup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="PublishedComponents" />
+		</Feature>
+
+	</Product>
+</Wix>

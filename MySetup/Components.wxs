@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+
+		<!--Product components-->
+		<ComponentGroup Id="ProductComponents">
+			<ComponentRef Id="MainAppShortcut"/>
+		</ComponentGroup>
+
+		<!--Installed files-->
+		<DirectoryRef Id="INSTALLFOLDER" FileSource="..\CheckWorkers\bin\$(var.Configuration)\net5.0\win-$(var.Platform)\publish">
+			<Component Id="MainAppShortcut" Guid="{56152F44-F476-4C83-8EE6-528237F42DA4}">
+
+				<!--Shortcut to application-->
+				<Shortcut Id="MainAppShortcut"
+						  Name="!(loc.ProductName_$(var.Platform))"
+						  Target="[INSTALLFOLDER]CheckWorkers.exe"
+						  Directory="InstallProgramMenuFolder"
+						  WorkingDirectory="INSTALLFOLDER"
+						  />
+
+				<!--Unique key for this component/shortcuts-->
+				<RegistryValue Id="RegShortcutKey"
+							   Name="ShortcutCheckWorkers"
+							   Root="HKCU"
+							   Key="SOFTWARE\!(loc.ProductFolder)"
+							   Value="1"
+							   Type="integer"
+							   KeyPath="yes"
+							   />
+
+
+				<!--Remove start menu items-->
+				<RemoveFolder Id="InstallProgramMenuFolder" Directory="InstallProgramMenuFolder" On="uninstall"/>
+			</Component>
+		</DirectoryRef>
+
+
+
+	</Fragment>
+</Wix>
