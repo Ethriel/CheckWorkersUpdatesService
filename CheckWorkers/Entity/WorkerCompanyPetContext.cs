@@ -1,17 +1,21 @@
-﻿using CheckWorkers.Helpers;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CheckWorkers.Entity
 {
     public partial class WorkerCompanyPetContext : DbContext
     {
-        public WorkerCompanyPetContext()
+        private readonly IConfiguration configuration;
+
+        public WorkerCompanyPetContext(IConfiguration configuration)
         {
+            this.configuration = configuration;
         }
 
-        public WorkerCompanyPetContext(DbContextOptions<WorkerCompanyPetContext> options)
+        public WorkerCompanyPetContext(DbContextOptions<WorkerCompanyPetContext> options, IConfiguration configuration)
             : base(options)
         {
+            this.configuration = configuration;
         }
 
         public virtual DbSet<Company> Company { get; set; }
@@ -21,7 +25,7 @@ namespace CheckWorkers.Entity
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(ConnectionStrings.Default);
+                optionsBuilder.UseSqlServer(configuration["Connectionstrings:Default"]);
             }
         }
 

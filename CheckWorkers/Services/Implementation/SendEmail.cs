@@ -3,7 +3,6 @@ using CheckWorkers.Services.Abstraction;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -36,6 +35,12 @@ namespace CheckWorkers.Services.Implementation
 
         public void SendTo(string email, IEnumerable<Worker> workers)
         {
+            var emailMessage = GetMessage(email, workers);
+            Send(emailMessage);
+        }
+
+        private MimeMessage GetMessage(string email, IEnumerable<Worker> workers)
+        {
             var format = MimeKit.Text.TextFormat.Text;
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("Workers updates", sender));
@@ -47,23 +52,27 @@ namespace CheckWorkers.Services.Implementation
                 Text = GetBodyText(workers)
             };
 
-            Send(emailMessage);
+            return emailMessage;
         }
 
         private string GetBodyText(IEnumerable<Worker> workers)
         {
             var sb = new StringBuilder();
             var formatted = default(string);
-            var date = default(DateTime);
 
             foreach (var worker in workers)
             {
-                date = worker.TimeUpdated;
-                formatted = string.Format(workerTemplate, worker.Name, worker.Company.CompanyName, date.ToShortDateString(), date.ToShortTimeString());
+                formatted = GetFormattedTemplate(worker);
                 sb.Append(formatted);
             }
 
             return sb.ToString();
+        }
+
+        private string GetFormattedTemplate(Worker worker)
+        {
+            var date = worker.TimeUpdated;
+            return string.Format(workerTemplate, worker.Name, worker.Company.CompanyName, date.ToShortDateString(), date.ToShortTimeString());
         }
 
         private void Send(MimeMessage emailMessage)

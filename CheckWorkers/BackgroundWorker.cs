@@ -19,12 +19,7 @@ namespace CheckWorkers
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await checkWorkers.CheckWorkers();
-            //while (!stoppingToken.IsCancellationRequested)
-            //{
-            //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            //    await Task.Delay(1000, stoppingToken);
-            //}
+            checkWorkers.CheckWorkers();
         }
     }
 }
